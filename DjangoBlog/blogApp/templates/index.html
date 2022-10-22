@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+  iBlog - Home
+{% endblock title %}
+
+{% block home %} active {% endblock home %}
+
+{% block body %}
+  <div class="container my-4">
+
+    <h2 class="text-center my-3 border-bottom pb-1">Recent Blogs</h2>
+
+    {% for post in posts %}
+      <div class="card text-center my-2">
+        <div class="card-header">{{post.author}}</div>
+        <div class="card-body">
+          <h5 class="card-title">{{post.title|truncatechars:50}}</h5>
+          <p class="card-text">{{post.content|truncatechars:200}}</p>
+          <a href="{% url 'blogPost' post.title post.id %}" class="btn btn-primary">Read More</a>
+        </div>
+        <div class="card-footer text-muted">{{post.date_of_creation|naturaltime}}</div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="w-25 mx-auto">
+    <nav aria-label="...">
+      <ul class="pagination">
+        <li class="page-item {% if not posts.has_previous %}disabled{% endif %}">
+          <a {% if posts.has_previous %}href="?page_no={{posts.previous_page_number}}"{% endif %}  class="page-link">Previous</a>
+        </li>
+        <li class="page-item"><a href="?page_no=1" class="page-link">First</a></li>
+        <li class="page-item active" aria-current="page"><a class="page-link">{{posts.number}}</a></li>
+        <li class="page-item"><a href="?page_no={{posts.paginator.num_pages}}" class="page-link">Last</a></li>
+        <li class="page-item {% if not posts.has_next %}disabled{% endif %}"><a {% if posts.has_next %} href="?page_no={{posts.next_page_number}}" {% endif %}class="page-link">Next</a></li>
+      </ul>
+    </nav>
+  </div>
+
+{% endblock body %}
